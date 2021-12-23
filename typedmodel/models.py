@@ -8,7 +8,7 @@ class MetaClass(type):
     def __new__(cls, name, bases, attr):
         # Replace each function with type checked one
         for name, value in attr.items():
-            if not name.startswith("_") and type(value) is FunctionType or type(value) is MethodType:
+            if not name.startswith("_") and (type(value) is FunctionType or type(value) is MethodType):
                 attr[name] = my_beartype(value)
 
         return super(MetaClass, cls).__new__(cls, name, bases, attr)
@@ -65,8 +65,10 @@ def test_base_model_type_checking():
         e: str = 'default'
 
     foo = Foo(a='test', b='test')
+
     assert foo.d == 'default'
     assert foo.e == 'default'
+
     with pytest.raises(TypeException):
         Foo(a=1, b=2)
 
@@ -80,6 +82,7 @@ def test_base_model_type_checking():
 
 def test_base_class_typed_function_call():
     import pytest
+
     class Foo(BaseModel):
         def foo(self, s: str) -> int:
             return int(s)
