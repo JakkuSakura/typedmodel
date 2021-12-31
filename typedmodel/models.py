@@ -61,7 +61,12 @@ class BaseModel(metaclass=MetaClass):
 
     @classmethod
     def _can_be_set(cls, key: str):
-        return cls._get_annotation(key) or hasattr(cls, key)
+        if cls._get_annotation(key) or hasattr(cls, key):
+            return True
+        elif issubclass(cls.__base__, BaseModel):
+            return cls.__base__._can_be_set(key)
+        else:
+            return False
 
     @classmethod
     def _get_annotation(cls, key: str):

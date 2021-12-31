@@ -65,3 +65,14 @@ def test_inheritance():
     Bar(bar=1)
     Bar(bar=1, foo='foo')
     assert Bar._can_be_set('foo')
+
+
+def test_inheritance2():
+    class Foo(BaseModel):
+        foo: str
+
+    class Bar(Foo):
+        bar: int
+
+    assert Bar._can_be_set('foo')
+    Bar(bar=1, foo='foo')
