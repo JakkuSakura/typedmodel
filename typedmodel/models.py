@@ -1,7 +1,7 @@
 import beartype
 
-from compat import *
-from utils import *
+from .compat import *
+from .utils import *
 
 
 class MetaClass(type):

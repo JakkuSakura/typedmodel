@@ -1,6 +1,6 @@
 import beartype
 
-from compat import *
+from .compat import *
 
 
 class TypeException(Exception):
