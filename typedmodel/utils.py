@@ -1,22 +1,5 @@
-import beartype
-
 from .compat import *
-
-
-class TypeException(Exception):
-    def __init__(self, reason):
-        self.args = (reason,)
-
-
-class ExtraArgumentException(Exception):
-    def __init__(self, reason):
-        self.args = (reason,)
-
-
-class MissingArgumentException(Exception):
-    def __init__(self, reason):
-        self.args = (reason,)
-
+from .exceptions import *
 
 def check_pep_type(obj, annotation) -> bool:
     try:
