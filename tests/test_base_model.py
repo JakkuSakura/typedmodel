@@ -56,9 +56,12 @@ def test_base_class_classmethod():
 
 def test_inheritance():
     class Foo(BaseModel):
-        foo: str
+        foo: str = 'test'
 
     class Bar(Foo):
         bar: int
 
     assert Bar._keys() == {'foo', 'bar'}
+    Bar(bar=1)
+    Bar(bar=1, foo='foo')
+    assert Bar._can_be_set('foo')

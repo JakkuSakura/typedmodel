@@ -1,4 +1,5 @@
 import beartype
+import copy
 
 from .compat import *
 from .utils import *
@@ -9,7 +10,7 @@ class MetaClass(type):
         # Replace each function with type checked one
         for name, value in attr.items():
             if not name.startswith("_") and (type(value) is FunctionType or type(value) is MethodType):
-                    # FIXME: classmethod is not type checked isinstance(value, classmethod) due to problem with:
+                # FIXME: classmethod is not type checked isinstance(value, classmethod) due to problem with:
 
                 attr[name] = my_beartype(value)
 
@@ -42,12 +43,21 @@ class BaseModel(metaclass=MetaClass):
 
     @classmethod
     def _has_default(cls, key: str):
-        return key in cls.__dict__
+        if key in cls.__dict__:
+            return True
+        elif issubclass(cls.__base__, BaseModel):
+            return cls.__base__._has_default(key)
+        else:
+            return False
 
     @classmethod
     def _get_default(cls, key: str):
-        import copy
-        return copy.copy(cls.__dict__.get(key))
+        if key in cls.__dict__:
+            return copy.copy(cls.__dict__.get(key))
+        elif issubclass(cls.__base__, BaseModel):
+            return cls.__base__._get_default(key)
+        else:
+            return None
 
     @classmethod
     def _can_be_set(cls, key: str):
