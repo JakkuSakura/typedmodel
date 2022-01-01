@@ -30,3 +30,4 @@ class Foo(BaseModel):
 foo = Foo(a="a", b="b")
 
 ```
+check `tests` for more use cases

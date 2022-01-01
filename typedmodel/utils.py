@@ -1,6 +1,7 @@
 from .compat import *
 from .exceptions import *
 
+
 def check_pep_type(obj, annotation) -> bool:
     try:
         return check_pep_type_raise_exception(obj, annotation)
@@ -8,21 +9,24 @@ def check_pep_type(obj, annotation) -> bool:
         return False
 
 
-def check_pep_type_raise_exception(obj, annotation):
-    import beartype.roar
-    import beartype
-    @beartype.beartype
-    def check(o) -> annotation:
-        return o
+try:
+    from beartype import is_bearable as check_pep_type_raise_exception
+except ImportError:
+    def check_pep_type_raise_exception(obj, annotation):
+        import beartype.roar
+        import beartype
+        @beartype.beartype
+        def check(o) -> annotation:
+            return o
 
-    try:
-        check(obj)
-        reason = None
-    except beartype.roar.BeartypeCallHintPepReturnException as e:
-        reason = e.args[0].split('return ')[-1]
-    if reason:
-        raise TypeException(reason)
-    return True
+        try:
+            check(obj)
+            reason = None
+        except beartype.roar.BeartypeCallHintPepReturnException as e:
+            reason = e.args[0].split('return ')[-1]
+        if reason:
+            raise TypeException(reason)
+        return True
 
 
 def my_beartype(func) -> Callable:

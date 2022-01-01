@@ -1,7 +1,7 @@
 import pytest
-from typedmodel.utils import TypeException, MissingArgumentException, ExtraArgumentException
 
 from typedmodel import BaseModel
+from typedmodel.utils import TypeException, MissingArgumentException, ExtraArgumentException
 
 
 def test_base_model_type_checking():
@@ -40,14 +40,24 @@ def test_base_class_typed_function_call():
 def test_base_class_classmethod():
     import beartype
     class Bar:
-        @beartype.beartype
         @classmethod
+        @beartype.beartype
         def foo(cls, s: str) -> int:
             return int(s)
 
     class Foo(BaseModel):
         @classmethod
         def foo(cls, s: str) -> int:
+            return int(s)
+
+    with pytest.raises(TypeException):
+        Foo.foo(1)
+
+
+def test_base_class_staticmethod():
+    class Foo(BaseModel):
+        @staticmethod
+        def foo(s: str) -> int:
             return int(s)
 
     with pytest.raises(TypeException):

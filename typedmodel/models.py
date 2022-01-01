@@ -9,10 +9,14 @@ class MetaClass(type):
     def __new__(cls, name, bases, attr):
         # Replace each function with type checked one
         for name, value in attr.items():
-            if not name.startswith("_") and (type(value) is FunctionType or type(value) is MethodType):
-                # FIXME: classmethod is not type checked isinstance(value, classmethod) due to problem with:
-
-                attr[name] = my_beartype(value)
+            if not name.startswith("_"):
+                if type(value) is FunctionType or type(value) is MethodType:
+                    attr[name] = my_beartype(value)
+                elif isinstance(value, classmethod):
+                    attr[name] = classmethod(my_beartype(value.__func__))
+                elif isinstance(value, staticmethod):
+                    attr[name] = staticmethod(my_beartype(value.__func__))
+                # elif isinstance(value, property):
 
         return super(MetaClass, cls).__new__(cls, name, bases, attr)
 
