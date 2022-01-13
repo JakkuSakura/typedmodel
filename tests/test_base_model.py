@@ -12,7 +12,7 @@ def test_base_model_type_checking():
         e: str = 'default'
 
     foo = Foo(a='test', b='test')
-
+    assert type(foo).__name__ == "Foo"
     assert foo.d == 'default'
     assert foo.e == 'default'
 
