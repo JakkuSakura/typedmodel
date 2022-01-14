@@ -79,3 +79,9 @@ class BaseModel(metaclass=MetaClass):
         annotation = type(self)._get_annotation(key) or Any
         check_pep_type_raise_exception(value, annotation)
         object.__setattr__(self, key, value)
+
+    def __getstate__(self):
+        return self.__dict__
+
+    def __setstate__(self, d):
+        self.__dict__.update(d)

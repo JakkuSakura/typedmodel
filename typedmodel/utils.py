@@ -55,3 +55,14 @@ def abstract(cls):
 
     cls.__init__ = new_init
     return cls
+
+def reannotate(value):
+    if type(value) is FunctionType:
+        return my_beartype(value)
+    elif isinstance(value, classmethod):
+        return classmethod(my_beartype(value.__func__))
+    elif isinstance(value, staticmethod):
+        return staticmethod(my_beartype(value.__func__))
+    else: # more missing
+        return value
+        

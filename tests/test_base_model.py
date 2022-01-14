@@ -86,3 +86,16 @@ def test_inheritance2():
 
     assert Bar._can_be_set('foo')
     Bar(bar=1, foo='foo')
+
+
+class PickleFoo(BaseModel):
+    foo: str
+
+
+def test_pickle():
+    import pickle
+
+    foo = PickleFoo(foo='123')
+    pkl = pickle.dumps(foo)
+    foo2 = pickle.loads(pkl)
+    assert foo.foo == foo2.foo
