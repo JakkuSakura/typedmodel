@@ -1,16 +1,14 @@
-import beartype
 import copy
 
-from .compat import *
 from .utils import *
 
 
 class MetaClass(type):
-    def __new__(cls, name, bases, attr):
+    def __new__(mcs, name, bases, attr):
         # Replace each function with type checked one
         for key, value in attr.items():
             if not key.startswith("_"):
-                if type(value) is FunctionType or type(value) is MethodType:
+                if type(value) is FunctionType:
                     attr[key] = my_beartype(value)
                 elif isinstance(value, classmethod):
                     attr[key] = classmethod(my_beartype(value.__func__))
@@ -18,7 +16,7 @@ class MetaClass(type):
                     attr[key] = staticmethod(my_beartype(value.__func__))
                 # elif isinstance(value, property):
 
-        return super(MetaClass, cls).__new__(cls, name, bases, attr)
+        return super(MetaClass, mcs).__new__(mcs, name, bases, attr)
 
 
 class BaseModel(metaclass=MetaClass):
