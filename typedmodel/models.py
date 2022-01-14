@@ -75,6 +75,33 @@ class BaseModel(metaclass=MetaClass):
         if hasattr(cls, "__annotations__"):
             return cls.__annotations__.get(key)
 
+    @classmethod
+    def _get_value(cls, v, to_dict: bool):
+        if not to_dict:
+            return v
+
+        if hasattr(v, 'dict'):
+            return v.dict()
+
+        if isinstance(v, dict):
+            return {
+                key: cls._get_value(val, to_dict=to_dict)
+                for key, val in v.items()
+            }
+        if isinstance(v, list):
+            return [
+                cls._get_value(val, to_dict=to_dict) for val in v
+            ]
+
+        return v
+
+    def dict(self) -> Dict[str, Any]:
+        result = {}
+        for key in self._keys():
+            val = getattr(self, key)
+            result[key] = type(self)._get_value(val, to_dict=True)
+        return result
+
     def __setattr__(self, key, value):
         annotation = type(self)._get_annotation(key) or Any
         check_pep_type_raise_exception(value, annotation)

@@ -99,3 +99,11 @@ def test_pickle():
     pkl = pickle.dumps(foo)
     foo2 = pickle.loads(pkl)
     assert foo.foo == foo2.foo
+
+
+def test_dict():
+    class Foo(BaseModel):
+        foo: str
+
+    foo = Foo(foo='123')
+    assert foo.dict() == {'foo': '123'}
