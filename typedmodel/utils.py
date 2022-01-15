@@ -5,7 +5,7 @@ import functools
 def check_pep_type(obj, annotation) -> bool:
     try:
         return check_pep_type_raise_exception(obj, annotation)
-    except:
+    except Exception as e:
         return False
 
 
@@ -15,10 +15,14 @@ except ImportError:
     def check_pep_type_raise_exception(obj, annotation):
         import beartype.roar
         import beartype
+        import typing
+        old_type_checking = typing.TYPE_CHECKING
+        typing.TYPE_CHECKING = False
         @beartype.beartype
         def check(o) -> annotation:
             return o
 
+        typing.TYPE_CHECKING = old_type_checking
         try:
             check(obj)
             reason = None
