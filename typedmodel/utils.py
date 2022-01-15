@@ -1,6 +1,6 @@
 from .compat import *
 from .exceptions import *
-
+import functools
 
 def check_pep_type(obj, annotation) -> bool:
     try:
@@ -34,6 +34,7 @@ def my_beartype(func) -> Callable:
     import beartype.roar
     enhanced = beartype.beartype(func)
 
+    @functools.wraps(func)
     def convert(*args, **kwargs):
         try:
             return enhanced(*args, **kwargs)
@@ -48,6 +49,7 @@ def my_beartype(func) -> Callable:
 def abstract(cls):
     old_init = cls.__init__
 
+    @functools.wraps(old_init)
     def new_init(self, *args, **kwargs):
         if type(self) == cls:
             raise TypeError(f"{cls} is abstract and cannot be initialized here")
