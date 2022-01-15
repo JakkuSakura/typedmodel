@@ -40,8 +40,7 @@ def my_beartype(func) -> Callable:
             return enhanced(*args, **kwargs)
         except beartype.roar.BeartypeException as e:
             args = e.args[0]
-
-        raise TypeException(args)
+            raise TypeException(args)
 
     return convert
 

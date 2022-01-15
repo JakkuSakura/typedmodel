@@ -76,6 +76,12 @@ def test_inheritance():
     Bar(bar=1, foo='foo')
     assert Bar._can_be_set('foo')
 
+def test_optional():
+    from typing import Optional
+    class Foo(BaseModel):
+        foo: Optional[str]
+    Foo(foo=None)
+
 
 def test_inheritance2():
     class Foo(BaseModel):
