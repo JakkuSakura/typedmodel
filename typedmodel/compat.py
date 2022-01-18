@@ -16,7 +16,7 @@ if versions > (3, 8, 8):
 
     Iterable = collections.abc.Iterable
     Iterator = collections.abc.Iterator
-    if sys.version_info >= (3, 9, 2):
+    if versions >= (3, 9, 2):
         Callable = collections.abc.Callable
     else:
         Callable = collections.abc.Callable
