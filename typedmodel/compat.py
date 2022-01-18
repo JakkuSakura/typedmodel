@@ -6,8 +6,8 @@ from typing import (Any, Callable, Dict, Generic, Iterable, Iterator, List,
                     Optional, Set, Tuple, TypeVar, Union, cast)
 from types import (FunctionType, MethodType)
 # handle type annotation changes in PEP 3107, 484, 526, 544, 560, 563, 585
-versions = (sys.version_info.major, sys.version_info.minor, sys.version_info.micro)
-if versions > (3, 8, 8):
+versions = sys.version_info[:3]
+if versions >= (3, 9, 0):
     Dict = dict
     List = list
     Set = set
